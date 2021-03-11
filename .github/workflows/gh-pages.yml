@@ -5,9 +5,10 @@ on:
     branches: [feature/version-documentation]
 
 jobs:
-  logLatestRelease:
+  getTags:
     runs-on: ubuntu-latest
-
+    outputs:
+      matrix: ${{ steps.set-matrix.outputs.matrix }}
     steps:
       - uses: octokit/request-action@v2.x
         id: get_latest_release
@@ -17,11 +18,15 @@ jobs:
           repo: request-action
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      - name: use output
-        run: |
-          echo $json_var | jq '.[].name'
-        env:
-          json_var: ${{ steps.get_latest_release.outputs.data }}
+      - id: set-matrix
+        run: echo "::set-output name=matrix::${{ steps.get_latest_release.outputs.data }}"
+  buildDocs:
+    needs: getTags
+    runs-on: ubuntu-latest
+    strategy:
+      matrix: ${{fromJson(needs.getTags.outputs.matrix)}}
+    steps:
+    - run: echo ${{ matrix.name }}
   gh_pages:
     runs-on: ubuntu-latest
 
