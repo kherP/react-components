@@ -17,7 +17,11 @@ jobs:
           repo: request-action
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      - run: "echo latest release: ${{ steps.get_latest_release.outputs.data }}"
+      - name: use output
+        run: |
+          echo $json_var | jq '.[].name'
+        env:
+          json_var: ${{ steps.get_latest_release.outputs.data }}
   gh_pages:
     runs-on: ubuntu-latest
 
