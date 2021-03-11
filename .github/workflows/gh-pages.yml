@@ -20,7 +20,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - id: set-matrix
         run: |
-          json_var = $data | jq
+          json_var = "$data"
           echo "::set-output name=matrix::{\"include\":$json_var}"
         env:
           data: ${{ steps.get_latest_release.outputs.data }}
