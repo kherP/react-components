@@ -2,9 +2,22 @@ name: Github Pages
 
 on:
   push:
-    branches: [master, beta]
+    branches: [feature/version-documentation]
 
 jobs:
+  logLatestRelease:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: octokit/request-action@v2.x
+        id: get_latest_release
+        with:
+          route: GET repos/kherp/react-components/git/matching-refs/tags
+          owner: octokit
+          repo: request-action
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - run: "echo latest release: ${{ steps.get_latest_release.outputs.data }}"
   gh_pages:
     runs-on: ubuntu-latest
 
