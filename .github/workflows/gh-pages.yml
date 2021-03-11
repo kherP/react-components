@@ -12,7 +12,7 @@ jobs:
       - uses: octokit/request-action@v2.x
         id: get_latest_release
         with:
-          route: GET repos/kherp/react-components/git/matching-refs/tags
+          route: GET repos/kherp/react-components/tags
           owner: octokit
           repo: request-action
         env:
