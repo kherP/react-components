@@ -20,9 +20,8 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - id: set-matrix
         run: |
-          jq '.[].name'
           for k in $($data | jq '.[]'); do
-            echo $k.name
+            echo "$k.name"
           done
           # echo "::set-output name=matrix::{\"include\":$json_var}"
         env:
