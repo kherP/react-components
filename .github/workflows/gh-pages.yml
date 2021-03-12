@@ -23,7 +23,7 @@ jobs:
           json_var=$(echo $data | jq -R)
           json_var="${json_var%\"}"
           json_var="${json_var#\"}"
-          echo "::set-output name=matrix::$json_var"
+          echo "::set-output name=matrix::{\"include\":$json_var}"
         env:
           data: ${{ steps.get_latest_release.outputs.data }}
   buildDocs:
@@ -32,7 +32,7 @@ jobs:
     strategy:
       matrix: ${{fromJson(needs.getTags.outputs.matrix)}}
     steps:
-    - run: echo ${{ matrix.name }}
+    - run: echo ${{ needs.getTags.outputs.matrix }}
   # gh_pages:
   #   runs-on: ubuntu-latest
 
