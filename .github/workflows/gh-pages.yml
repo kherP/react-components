@@ -20,18 +20,9 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - id: set-matrix
         run: |
-          JSON="{\"include\":["
-          for k in $($data | jq '.[]'); do
-            JSONline="{\"name\": \"$k.name\"},"
-            JSON="$JSON$JSONline"
-          done
-          if [[ $JSON == *, ]]; then
-            JSON="${JSON%?}"
-          fi
-          JSON="$JSON]}"
-          echo "::set-output name=matrix::{\"include\":$JSON}"
+          echo "::set-output name=matrix::{\"include\":$data}"
         env:
-          data: ${{ steps.get_latest_release.outputs.data }}
+          data: ${{ fromJson(steps.get_latest_release.outputs.data) }}
   buildDocs:
     needs: getTags
     runs-on: ubuntu-latest
