@@ -20,8 +20,9 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - id: set-matrix
         run: |
-          json_var=$(fromJson(data))
-          echo "::set-output name=matrix::{\"include\":$json_var}"
+          arr=( $(jq -r '.[].item2' data) )
+          printf '%s\n' "${arr[@]}"
+          echo "::set-output name=matrix::{\"include\":$data}"
         env:
           data: ${{steps.get_latest_release.outputs.data}}
   buildDocs:
