@@ -31,14 +31,14 @@ jobs:
           fi
           JSON="$JSON]}"
           printf "$JSON"
-          echo "::set-output name=matrix::{\"include\":$JSON}"
+          echo "::set-output name=matrix::$JSON"
         env:
           data: ${{steps.get_latest_release.outputs.data}}
   buildDocs:
     needs: getTags
     runs-on: ubuntu-latest
-    # strategy:
-    #   matrix: ${{fromJson(needs.getTags.outputs.matrix)}}
+    strategy:
+      matrix: ${{fromJson(needs.getTags.outputs.matrix)}}
     steps:
     - run: echo ${{ needs.getTags.outputs.matrix }}
   # gh_pages:
