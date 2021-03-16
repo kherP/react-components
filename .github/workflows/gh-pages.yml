@@ -27,7 +27,7 @@ jobs:
     needs: getTags
     runs-on: ubuntu-latest
     strategy:
-      matrix: ${{fromJson(needs.getTags.outputs.matrix)}}
+      matrix: ${{needs.getTags.outputs.matrix}}
     steps:
     - run: echo ${{ needs.getTags.outputs.matrix }}
   # gh_pages:
