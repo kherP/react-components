@@ -22,8 +22,8 @@ jobs:
         run: |
           arr=( $(echo $data | jq -r '.[].name') )
           JSON="{\"include\":["
-          for k in arr do
-            JSONline="{\"name\": \"${k}\"},"
+          for k in "${arr[@]}" do
+            JSONline="{\"name\": \"$k\"},"
             JSON="$JSON$JSONline"
           done
           if [[ $JSON == *, ]]; then
