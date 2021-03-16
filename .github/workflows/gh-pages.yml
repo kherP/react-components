@@ -20,7 +20,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - id: set-matrix
         run: |
-          arr=( $(jq -r '.[].item2' data) )
+          arr=( $(echo $data | jq -r '.[].name') )
           printf '%s\n' "${arr[@]}"
           echo "::set-output name=matrix::{\"include\":$data}"
         env:
