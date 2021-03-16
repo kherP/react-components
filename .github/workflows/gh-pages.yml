@@ -22,9 +22,10 @@ jobs:
         run: |
           arr=( $(echo $data | jq -r '.[].name') )
           JSON="{\"include\":["
-          for k in "${arr[@]}" do
-            JSON="$JSON{\"name\": \"\"},"
-          done
+          # for k in "${arr[@]}" do
+          #   JSON="$JSON{\"name\": \"\"},"
+          # done
+          JSON="$JSON$(printf '{"name": "%s"},\n' "${arr[@]}" | sed '$s/,$//')"
           if [[ $JSON == *, ]]; then
             JSON="${JSON%?}"
           fi
