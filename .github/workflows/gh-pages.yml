@@ -19,9 +19,11 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - id: set-matrix
-        run: echo "::set-output name=matrix::{\"include\":$data}"
+        run: |
+          json_var=$(fromJSON($data))
+          echo "::set-output name=matrix::{\"include\":$json_var}"
         env:
-          data: ${{fromJson(steps.get_latest_release.outputs.data)}}
+          data: ${{steps.get_latest_release.outputs.data}}
   buildDocs:
     needs: getTags
     runs-on: ubuntu-latest
