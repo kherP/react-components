@@ -21,15 +21,23 @@ jobs:
       - id: set-matrix
         run: |
           arr=( $(echo $data | jq -r '.[].name') )
-          printf '%s\n' "${arr[@]}"
-          echo "::set-output name=matrix::{\"include\":$data}"
+          JSON="{\"include\":["
+          for k in arr do
+            JSONline="{\"name\": \"$k\"},"
+            JSON="$JSON$JSONline"
+          done
+          if [[ $JSON == *, ]]; then
+            JSON="${JSON%?}"
+          fi
+          JSON="$JSON]}"
+          echo "::set-output name=matrix::{\"include\":$JSON}"
         env:
           data: ${{steps.get_latest_release.outputs.data}}
   buildDocs:
     needs: getTags
     runs-on: ubuntu-latest
     strategy:
-      matrix: ${{needs.getTags.outputs.matrix}}
+      matrix: ${{fromJson(needs.getTags.outputs.matrix)}}
     steps:
     - run: echo ${{ needs.getTags.outputs.matrix }}
   # gh_pages:
