@@ -30,7 +30,7 @@ jobs:
             JSON="${JSON%?}"
           fi
           JSON="$JSON]}"
-          echo $JSON
+          echo "test: $JSON"
           echo "::set-output name=matrix::$JSON"
         env:
           data: ${{steps.get_latest_release.outputs.data}}
