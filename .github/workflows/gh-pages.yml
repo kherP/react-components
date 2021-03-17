@@ -22,10 +22,15 @@ jobs:
         run: |
           arr=( $(echo $data | jq -r '.[].name') )
           JSON="{\"include\":["
-          # for k in "${arr[@]}" do
-          #   JSON="$JSON{\"name\": \"\"},"
-          # done
-          JSON="$JSON$(printf '{"name": "%s"}, ' "${arr[@]}" | sed '$s/,$//')"
+          minver="v3.0.0"
+          for i in "${arr[@]}"
+          do
+            echo $i
+            if [ "$(printf '%s\n' "$minver" "$i" | sort -V | head -n1)" = "$minver" ]; then 
+              JSON="$JSON$(printf '{"name": "%i"}')"
+            fi
+          done
+          # JSON="$JSON$(printf '{"name": "%s"}, ' "${arr[@]}" | sed '$s/,$//')"
           JSON="${JSON%,*} ${JSON##*,}"
           JSON="$JSON]}"
           echo "test: $JSON"
