@@ -54,6 +54,7 @@ jobs:
           requiredver="v5.0.0"
           currentver=$(echo ${{ matrix.name }})
           if [ "$(printf '%s\n' "$requiredver" "$currentver" | sort -V | head -n1)" = "$requiredver" ]; then 
+            echo "base=\"/react-components/${currentver}\"" >> .env
             npm run build:docs
             echo "::set-output name=doc_folder::docs/public"
           else
