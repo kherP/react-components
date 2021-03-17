@@ -55,7 +55,6 @@ jobs:
       - name: Building docs
         id: get_doc_folder
         run: |
-          currentver=$(echo ${{ matrix.name }})
           if [ "$(printf '%s\n' "$requiredver" "$currentver" | sort -V | head -n1)" = "$requiredver" ]; then 
             echo "base=\"/react-components/${currentver}\"" >> .env
             npm run build:docs
@@ -66,6 +65,7 @@ jobs:
           fi
         env:
           requiredver: v5.0.0
+          currentver: ${{ matrix.name }}
       - name: Deploy 🚀
         uses: JamesIves/github-pages-deploy-action@3.7.1
         with:
