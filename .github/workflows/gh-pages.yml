@@ -27,7 +27,7 @@ jobs:
           # done
           JSON="$JSON$(printf '{"name": "%s"}, ' "${arr[@]}" | sed '$s/,$//')"
           JSON="${JSON%,*} ${JSON##*,}"
-          JSON="$JSON], "max-parallel": "1" }"
+          JSON="$JSON], \"max-parallel\": \"1\" }"
           echo "test: $JSON"
           echo "::set-output name=matrix::$JSON"
         env:
