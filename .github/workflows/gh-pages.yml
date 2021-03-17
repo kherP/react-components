@@ -40,7 +40,7 @@ jobs:
     steps:
       - run: |
           requiredver="v5.0.0"
-          currentver=$(echo {{$matrix.name}})
+          currentver=$(echo ${{ matrix.name }})
           echo $currentver
           echo $requiredver
           if [ "$(printf '%s\n' "$requiredver" "$currentver" | sort -V | head -n1)" = "$requiredver" ]; then 
