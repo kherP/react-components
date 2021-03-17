@@ -26,9 +26,7 @@ jobs:
           #   JSON="$JSON{\"name\": \"\"},"
           # done
           JSON="$JSON$(printf '{"name": "%s"}, ' "${arr[@]}" | sed '$s/,$//')"
-          if [[ $JSON == *, ]]; then
-            JSON="${JSON%?}"
-          fi
+          JSON="${JSON%,*} ${JSON##*,}"
           JSON="$JSON]}"
           echo "test: $JSON"
           echo "::set-output name=matrix::$JSON"
