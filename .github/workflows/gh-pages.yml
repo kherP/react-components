@@ -25,7 +25,7 @@ jobs:
           # for k in "${arr[@]}" do
           #   JSON="$JSON{\"name\": \"\"},"
           # done
-          JSON="$JSON$(printf '{"name": "%s"},\n' "${arr[@]}" | sed '$s/,$//')"
+          JSON="$JSON$(printf '{"name": "%s"}, ' "${arr[@]}" | sed '$s/,$//')"
           if [[ $JSON == *, ]]; then
             JSON="${JSON%?}"
           fi
