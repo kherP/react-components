@@ -93,7 +93,7 @@ jobs:
           if [ "$(printf '%s\n' "$requiredver" "$currentver" | sort -V | head -n1)" = "$requiredver" ]; then 
             echo "base=\"/react-components/${currentver}\"" >> .env
             mkdir -p $jsonPath && touch $jsonPath$jsonFile
-            echo "$data" > $jsonPath$jsonFileName
+            echo "$data" > $jsonPath$jsonFile
             npm run build:docs
             echo "::set-output name=doc_folder::docs/public"
           else
