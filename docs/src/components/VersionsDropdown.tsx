@@ -15,13 +15,13 @@ const VersionsDropdown: React.FC<React.PropsWithChildren<VersionsDropdownProps>>
         const currentpath: string = window.location.href;
         const regex: RegExp = new RegExp("v(\\d+\\.)(\\d+\\.)(\\d)(-(beta|alpha)(\\.\\d))?", "g");
         const matchedVersions: Array<string> = currentpath.match(regex);
-        setCurrentVersion(withPrefix(matchedVersions?.length > 0 ? matchedVersions[0] : versions[0].name));
+        setCurrentVersion(matchedVersions?.length > 0 ? matchedVersions[0] : versions[0].name);
     }, []);
 
     return (
         <Dropdown className={props.className} value={currentVersion} onChange={(e: React.ChangeEvent<HTMLSelectElement>) => navigate(e.target.value)}>
             {versions.map((item, index: number) => (
-                <option key={index} value={withPrefix(item.name)}>
+                <option key={index} value={item.name}>
                     {item.name}
                 </option>
             ))}

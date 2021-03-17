@@ -39,6 +39,7 @@ jobs:
     needs: get_tags
     runs-on: ubuntu-latest
     outputs:
+      matrix: ${{ needs.get_tags.outputs.matrix }}
       path: ${{ steps.get_version_list.outputs.path }}
       file: ${{ steps.get_version_list.outputs.file }}
     steps:
@@ -75,7 +76,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       max-parallel: 1
-      matrix: ${{fromJson(needs.get_tags.outputs.matrix)}}
+      matrix: ${{fromJson(needs.gh_pages.outputs.matrix)}}
     steps:
       - uses: actions/checkout@v2
         with:
@@ -101,7 +102,7 @@ jobs:
           fi
         env:
           requiredver: v5.0.0
-          data: ${{needs.get_tags.outputs.matrix}}
+          data: ${{needs.gh_pages.outputs.matrix}}
           jsonPath: ${{ needs.gh_pages.outputs.path }}
           jsonFile: ${{ needs.gh_pages.outputs.file }}
           currentver: ${{ matrix.name }}
