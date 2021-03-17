@@ -27,7 +27,7 @@ jobs:
           # done
           JSON="$JSON$(printf '{"name": "%s"}, ' "${arr[@]}" | sed '$s/,$//')"
           JSON="${JSON%,*} ${JSON##*,}"
-          JSON="$JSON], \"max-parallel\": \"1\" }"
+          JSON="$JSON]}"
           echo "test: $JSON"
           echo "::set-output name=matrix::$JSON"
         env:
@@ -36,6 +36,7 @@ jobs:
     needs: getTags
     runs-on: ubuntu-latest
     strategy:
+      max-parallel: 1
       matrix: ${{fromJson(needs.getTags.outputs.matrix)}}
     steps:
       - uses: actions/checkout@v2
