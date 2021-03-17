@@ -5,7 +5,7 @@ on:
     branches: [feature/version-documentation]
 
 jobs:
-  getTags:
+  get_tags:
     runs-on: ubuntu-latest
     outputs:
       matrix: ${{ steps.set-matrix.outputs.matrix }}
@@ -25,7 +25,6 @@ jobs:
           for i in "${arr[@]}"
           do
             if [ "$(printf '%s\n' "$minver" "$i" | sort -V | head -n1)" = "$minver" ]; then 
-              echo "$minver $i"
               JSON="$JSON$(printf '{"name": "%s"}, ' "${i}")"
             fi
           done
@@ -36,12 +35,38 @@ jobs:
         env:
           data: ${{steps.get_latest_release.outputs.data}}
           minver: v3.0.0
+  gh_pages:
+    needs: get_tags
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Setup Node
+        uses: actions/setup-node@v2
+        with:
+          node-version: 14.x
+
+      - name: Installing dependencies
+        run: npm ci
+      - name: Generating versions list
+        run: echo "$data" >> ./docs/src/assets/jsons/versions.json
+        env:
+          data: ${{needs.get_tags.outputs.matrix}}
+      - name: Building docs
+        run: npm run build:docs
+
+      - name: Publish
+        uses: crazy-max/ghaction-github-pages@v2.2.0
+        with:
+          build_dir: docs/public
+        env:
+          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
   buildDocs:
-    needs: getTags
+    needs: gh_pages
     runs-on: ubuntu-latest
     strategy:
       max-parallel: 1
-      matrix: ${{fromJson(needs.getTags.outputs.matrix)}}
+      matrix: ${{fromJson(needs.get_tags.outputs.matrix)}}
     steps:
       - uses: actions/checkout@v2
         with:
@@ -75,27 +100,4 @@ jobs:
           TARGET_FOLDER: ${{ matrix.name }}
           CLEAN: true # Automatically remove deleted files from the deploy branch
           CLEAN_EXCLUDE: '["version"]'
-  # gh_pages:
-  #   runs-on: ubuntu-latest
-
-  #   steps:
-  #     - uses: actions/checkout@v2
-
-  #     - name: Setup Node
-  #       uses: actions/setup-node@v2
-  #       with:
-  #         node-version: 14.x
-
-  #     - name: Installing dependencies
-  #       run: npm ci
-
-  #     - name: Building docs
-  #       run: npm run build:docs
-
-  #     - name: Publish
-  #       uses: crazy-max/ghaction-github-pages@v2.2.0
-  #       with:
-  #         build_dir: docs/public
-  #       env:
-  #         GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
           
