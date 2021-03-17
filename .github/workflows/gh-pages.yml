@@ -26,8 +26,7 @@ jobs:
           for i in "${arr[@]}"
           do
             if [ "$(printf '%s\n' "$minver" "$i" | sort -V | head -n1)" = "$minver" ]; then 
-              echo $i
-              JSON="$JSON$(printf '{"name": "$i"}, ')"
+              JSON="$JSON$(printf '{"name": "%s"}, ' "${i}")"
             fi
           done
           # JSON="$JSON$(printf '{"name": "%s"}, ' "${arr[@]}" | sed '$s/,$//')"
