@@ -22,14 +22,13 @@ jobs:
         run: |
           arr=( $(echo $data | jq -r '.[].name') )
           JSON="{\"include\":["
-          minver="v3.0.0"
+          minver=$(echo ${{ secrets.DOC_MIN_VERSION }})
           for i in "${arr[@]}"
           do
             if [ "$(printf '%s\n' "$minver" "$i" | sort -V | head -n1)" = "$minver" ]; then 
               JSON="$JSON$(printf '{"name": "%s"}, ' "${i}")"
             fi
           done
-          # JSON="$JSON$(printf '{"name": "%s"}, ' "${arr[@]}" | sed '$s/,$//')"
           JSON="${JSON%,*} ${JSON##*,}"
           JSON="$JSON]}"
           echo "test: $JSON"
