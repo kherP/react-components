@@ -4,13 +4,15 @@ on:
   push:
     branches: [feature/version-documentation]
 
+
 jobs:
   get_tags:
     runs-on: ubuntu-latest
     outputs:
       matrix: ${{ steps.set-matrix.outputs.matrix }}
     steps:
-      - uses: octokit/request-action@v2.x
+      - name: Get list of releases 📋
+        uses: octokit/request-action@v2.x
         id: get_latest_release
         with:
           route: GET /repos/kherp/react-components/tags
@@ -18,7 +20,8 @@ jobs:
           repo: request-action
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      - id: set-matrix
+      - name: Convert list of releases to json and filter out versions less than minimum version 📝
+        id: set-matrix
         run: |
           arr=( $(echo $data | jq -r '.[].name') )
           JSON="{\"include\":["
@@ -45,12 +48,12 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
-      - name: Setup Node
+      - name: Setup Node 🏗️
         uses: actions/setup-node@v2
         with:
           node-version: 14.x
 
-      - name: Installing dependencies
+      - name: Installing dependencies ⏳
         run: npm ci
       - name: Generating versions list
         id: get_version_list
@@ -62,10 +65,10 @@ jobs:
           data: ${{needs.get_tags.outputs.matrix}}
           jsonPath: ./docs/src/assets/jsons/
           jsonFileName: versions.json
-      - name: Building docs
+      - name: Building docs 🔨
         run: npm run build:docs
 
-      - name: Publish
+      - name: Publish 🚀
         uses: crazy-max/ghaction-github-pages@v2.2.0
         with:
           build_dir: docs/public
@@ -81,13 +84,13 @@ jobs:
       - uses: actions/checkout@v2
         with:
           ref: ${{ matrix.name }}
-      - name: Setup Node
+      - name: Setup Node 🏗️
         uses: actions/setup-node@v2
         with:
           node-version: 14.x
-      - name: Installing dependencies
+      - name: Installing dependencies ⏳
         run: npm ci
-      - name: Building docs
+      - name: Building docs 🔨
         id: get_doc_folder
         run: |
           if [ "$(printf '%s\n' "$requiredver" "$currentver" | sort -V | head -n1)" = "$requiredver" ]; then 

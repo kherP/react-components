@@ -1,5 +1,4 @@
 import React from "react";
-import { navigate } from "gatsby";
 import { Dropdown } from "@sebgroup/react-components/Dropdown";
 import { withPrefix } from "gatsby-link";
 const versions = require("../assets/jsons/versions.json").include;
@@ -19,7 +18,11 @@ const VersionsDropdown: React.FC<React.PropsWithChildren<VersionsDropdownProps>>
     }, []);
 
     return (
-        <Dropdown className={props.className} value={currentVersion} onChange={(e: React.ChangeEvent<HTMLSelectElement>) => navigate(e.target.value)}>
+        <Dropdown
+            className={props.className}
+            value={currentVersion}
+            onChange={(e: React.ChangeEvent<HTMLSelectElement>) => (window.location.href = `${window.location.origin}${withPrefix(e.target.value)}/`)}
+        >
             {versions.map((item, index: number) => (
                 <option key={index} value={item.name}>
                     {item.name}
