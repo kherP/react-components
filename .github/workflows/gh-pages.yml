@@ -39,15 +39,15 @@ jobs:
       matrix: ${{fromJson(needs.getTags.outputs.matrix)}}
     steps:
       - run: |
-        requiredver="v5.0.0"
-        currentver={{$matrix.name}}
-        echo $currentver
-        echo $requiredver
-        if [ "$(printf '%s\n' "$requiredver" "$currentver" | sort -V | head -n1)" = "$requiredver" ]; then 
-                echo "greater than or equal to ${requiredver}"
-        else
-                echo "less than ${requiredver}"
-        fi
+          requiredver="v5.0.0"
+          currentver={{$matrix.name}}
+          echo $currentver
+          echo $requiredver
+          if [ "$(printf '%s\n' "$requiredver" "$currentver" | sort -V | head -n1)" = "$requiredver" ]; then 
+                  echo "greater than or equal to ${requiredver}"
+          else
+                  echo "less than ${requiredver}"
+          fi
   # gh_pages:
   #   runs-on: ubuntu-latest
 
