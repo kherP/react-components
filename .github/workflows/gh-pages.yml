@@ -59,7 +59,7 @@ jobs:
       - name: Publish
         uses: crazy-max/ghaction-github-pages@v2.2.0
         with:
-          build_dir: format('docs/public/{0}', ${{ matrix.name }})
+          build_dir: docs/public/${{ matrix.name }}
         env:
           GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
   # gh_pages:
