@@ -38,16 +38,30 @@ jobs:
     strategy:
       matrix: ${{fromJson(needs.getTags.outputs.matrix)}}
     steps:
-      - run: |
+      - uses: actions/checkout@v2
+        with:
+          ref: ${{ matrix.name }}
+      - name: Setup Node
+        uses: actions/setup-node@v2
+        with:
+          node-version: 14.x
+      - name: Installing dependencies
+        run: npm ci
+      - name: Building docs
+        run: |
           requiredver="v5.0.0"
           currentver=$(echo ${{ matrix.name }})
-          echo $currentver
-          echo $requiredver
           if [ "$(printf '%s\n' "$requiredver" "$currentver" | sort -V | head -n1)" = "$requiredver" ]; then 
-                  echo "greater than or equal to ${requiredver}"
+            npm run build:docs
           else
-                  echo "less than ${requiredver}"
+            npm run docs
           fi
+      - name: Publish
+        uses: crazy-max/ghaction-github-pages@v2.2.0
+        with:
+          build_dir: format('docs/public/{0}', ${{ matrix.name }})
+        env:
+          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
   # gh_pages:
   #   runs-on: ubuntu-latest
 
