@@ -40,7 +40,8 @@ jobs:
     steps:
       - run: |
           requiredver="v5.0.0"
-          if [ "$(printf '%s\n' "$requiredver" "$matrix.name" | sort -V | head -n1)" = "$requiredver" ]; then 
+          currentver={{$matrix.name}}
+          if [ "$(printf '%s\n' "$requiredver" "$currentver" | sort -V | head -n1)" = "$requiredver" ]; then 
                   echo "greater than or equal to ${requiredver}"
           else
                   echo "less than ${requiredver}"
