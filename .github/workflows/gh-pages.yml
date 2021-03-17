@@ -39,7 +39,7 @@ jobs:
       matrix: ${{fromJson(needs.getTags.outputs.matrix)}}
     steps:
       - run: |
-          requiredver="5.0.0"
+          requiredver="v5.0.0"
           if [ "$(printf '%s\n' "$requiredver" "$matrix.name" | sort -V | head -n1)" = "$requiredver" ]; then 
                   echo "greater than or equal to ${requiredver}"
           else
