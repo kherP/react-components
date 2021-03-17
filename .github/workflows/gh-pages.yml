@@ -38,6 +38,9 @@ jobs:
   gh_pages:
     needs: get_tags
     runs-on: ubuntu-latest
+    outputs:
+      path: ${{ steps.get_version_list.outputs.path }}
+      file: ${{ steps.get_version_list.outputs.file }}
     steps:
       - uses: actions/checkout@v2
 
@@ -49,9 +52,15 @@ jobs:
       - name: Installing dependencies
         run: npm ci
       - name: Generating versions list
-        run: echo "$data" >> ./docs/src/assets/jsons/versions.json
+        id: get_version_list
+        run: |
+          echo "$data" > $jsonPath$jsonFileName
+          echo "::set-output name=path::$jsonPath"
+          echo "::set-output name=file::$jsonFileName"
         env:
           data: ${{needs.get_tags.outputs.matrix}}
+          jsonPath: ./docs/src/assets/jsons/
+          jsonFileName: versions.json
       - name: Building docs
         run: npm run build:docs
 
@@ -82,6 +91,8 @@ jobs:
         run: |
           if [ "$(printf '%s\n' "$requiredver" "$currentver" | sort -V | head -n1)" = "$requiredver" ]; then 
             echo "base=\"/react-components/${currentver}\"" >> .env
+            mkdir -p $jsonPath && touch $jsonPath$jsonFile
+            echo "$data" > $jsonPath$jsonFileName
             npm run build:docs
             echo "::set-output name=doc_folder::docs/public"
           else
@@ -90,6 +101,9 @@ jobs:
           fi
         env:
           requiredver: v5.0.0
+          data: ${{needs.get_tags.outputs.matrix}}
+          jsonPath: ${{ needs.gh_pages.outputs.path }}
+          jsonFile: ${{ needs.gh_pages.outputs.file }}
           currentver: ${{ matrix.name }}
       - name: Deploy 🚀
         uses: JamesIves/github-pages-deploy-action@3.7.1
