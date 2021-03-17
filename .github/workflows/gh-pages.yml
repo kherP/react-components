@@ -41,9 +41,9 @@ jobs:
       - run: |
           requiredver="5.0.0"
           if [ "$(printf '%s\n' "$requiredver" "$matrix.name" | sort -V | head -n1)" = "$requiredver" ]; then 
-                  echo "${matrix.name} greater than or equal to ${requiredver}"
+                  echo "greater than or equal to ${requiredver}"
           else
-                  echo "${matrix.name} less than ${requiredver}"
+                  echo "less than ${requiredver}"
           fi
   # gh_pages:
   #   runs-on: ubuntu-latest
