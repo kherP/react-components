@@ -1,0 +1,2 @@
+(window.webpackJsonp=window.webpackJsonp||[]).push([[26],{e7k3:function(n,t,e){"use strict";e.r(t);var a=e("mXGw"),c=e.n(a),o=e("Wbzz"),u=c.a.memo((function(){return c.a.useEffect((function(){Object(o.navigate)("/docs/getting-started")}),[]),null}));t.default=u}}]);
+//# sourceMappingURL=component---src-pages-docs-index-tsx-7e414da7918db41a7fe3.js.map
